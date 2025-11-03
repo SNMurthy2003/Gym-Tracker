@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../services/api';
 import './Login.css';
 
 const Login = () => {
@@ -7,17 +8,26 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
 
-    // ✅ Hardcoded login
-    if (username === "Admin" && password === "gym123") {
-      setError('');
-      navigate('/dashboard');
-    } else {
-      setError('Invalid username or password');
+    try {
+      const response = await login(username, password);
+      if (response.data.success) {
+        navigate('/dashboard');
+      } else {
+        setError(response.data.message || 'Invalid username or password');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError(err.response?.data?.message || 'Invalid username or password');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -84,7 +94,9 @@ const Login = () => {
               )}
             </button>
           </div>
-          <button type="submit" className="btn-submit">Sign In</button>
+          <button type="submit" className="btn-submit" disabled={loading}>
+            {loading ? 'Signing in...' : 'Sign In'}
+          </button>
           {error && <div className="error-msg">{error}</div>}
         </form>
       </div>
