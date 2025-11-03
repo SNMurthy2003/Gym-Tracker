@@ -258,7 +258,18 @@ For any help, contact us at ${process.env.GYM_CONTACT}.
 
 /* ----------------- Start server ----------------- */
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, async () => {
-  console.log(`🚀 Backend running at http://localhost:${PORT}`);
-  await markOverdueMembers();
-});
+
+// For Vercel serverless functions
+if (process.env.VERCEL) {
+  // Don't call app.listen() on Vercel
+  markOverdueMembers();
+} else {
+  // For local development
+  app.listen(PORT, async () => {
+    console.log(`🚀 Backend running at http://localhost:${PORT}`);
+    await markOverdueMembers();
+  });
+}
+
+// Export for Vercel
+export default app;
