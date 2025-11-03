@@ -5,12 +5,16 @@ import cors from "cors";
 import dotenv from "dotenv";
 import cron from "node-cron";
 import twilio from "twilio";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Auth routes
+app.use("/api/auth", authRoutes);
 
 /* ----------------- Twilio WhatsApp Setup ----------------- */
 const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);

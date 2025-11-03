@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 
-const DEFAULT_USERNAME = "Admin";
-const DEFAULT_PASSWORD = "gym123";
+const DEFAULT_USERNAME = "admin";
+const DEFAULT_PASSWORD = "admin123";
 
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
@@ -14,4 +14,4 @@ router.post('/login', (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
